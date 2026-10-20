@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int|null $season_id
+ * @property string $type
+ * @property \Illuminate\Support\Carbon|null $transaction_date
+ * @property string|null $description
+ * @property int|null $created_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Player> $players
+ */
 class Transaction extends Model
 {
     protected $fillable = [

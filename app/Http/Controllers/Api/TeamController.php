@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Conference;
 use App\Models\Division;
 use App\Models\Season;
 use App\Models\Team;
@@ -21,6 +22,13 @@ class TeamController extends Controller
     public function divisions(): JsonResponse
     {
         return response()->json(Division::query()->orderBy('name')->get());
+    }
+
+    public function conferences(): JsonResponse
+    {
+        return response()->json(
+            Conference::query()->orderBy('name')->get(['id', 'name'])
+        );
     }
 
     public function index(): JsonResponse

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Season;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeasonController extends Controller
 {
@@ -53,5 +54,26 @@ class SeasonController extends Controller
         $season = Season::query()->create($data);
 
         return response()->json($season, 201);
+    }
+
+    public function setCurrent(Request $request, int $id): JsonResponse
+    {
+        $data = $request->validate([
+            'is_current' => ['required', 'boolean'],
+        ]);
+        $season = Season::query()->findOrFail($id);
+
+        DB::transaction(function () use ($season, $data) {
+            if ($data['is_current']) {
+                Season::query()->where('id', '!=', $season->id)->update(['is_current' => false]);
+            }
+
+            $season->update(['is_current' => $data['is_current']]);
+        });
+
+        return response()->json([
+            'message' => $data['is_current'] ? 'Current season updated' : 'Current season cleared',
+            'season' => $season->fresh(),
+        ]);
     }
 }

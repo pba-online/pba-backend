@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int|null $team_id
+ * @property int|null $player_id
+ * @property int|null $coach_id
+ * @property int|null $start_season_id
+ * @property int|null $end_season_id
+ * @property int|null $total_salary
+ * @property string $contract_type
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ContractYear> $years
+ * @property-read Team|null $team
+ * @property-read Player|null $player
+ * @property-read Coach|null $coach
+ */
 class Contract extends Model
 {
     protected $fillable = [

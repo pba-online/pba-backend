@@ -5,6 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $contract_id
+ * @property int $season_id
+ * @property int $salary
+ * @property bool|null $player_option
+ * @property bool|null $team_option
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Contract|null $contract
+ * @property-read Season|null $season
+ */
 class ContractYear extends Model
 {
     protected $fillable = [

@@ -5,6 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $season_id
+ * @property string $name
+ * @property int|null $player_id
+ * @property int|null $coach_id
+ * @property int|null $team_id
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Season|null $season
+ * @property-read Player|null $player
+ * @property-read Coach|null $coach
+ * @property-read Team|null $team
+ */
 class Award extends Model
 {
     protected $fillable = [

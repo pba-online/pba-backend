@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\CoachRating;
 use App\Models\Contract;
 use App\Models\ContractYear;
 use App\Models\PlayerRating;
 use App\Models\Season;
+use App\Models\Team;
 use App\Models\TeamCoach;
 use App\Models\TeamRoster;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +15,19 @@ use Illuminate\Http\Request;
 
 class RosterController extends Controller
 {
+    public function teamIndex(Request $request): JsonResponse
+    {
+        $teamId = Team::query()
+            ->where('name', $request->user()->team_name)
+            ->value('id');
+
+        abort_unless($teamId, 403, 'This account is not assigned to a team.');
+
+        $request->merge(['team_id' => $teamId]);
+
+        return $this->index($request);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $seasonId = $request->integer('season_id') ?: Season::current()?->id;
@@ -36,8 +49,8 @@ class RosterController extends Controller
 
         $contracts = Contract::query()
             ->with('years')
-            ->where('type', 'player')
-            ->where('is_active', true)
+            ->where('contract_type', 'player')
+            ->where('status', 'active')
             ->whereIn('player_id', $playerIds)
             ->get()
             ->keyBy('player_id');
@@ -64,8 +77,13 @@ class RosterController extends Controller
                 'first_name' => $player->first_name,
                 'last_name' => $player->last_name,
                 'photo_url' => $player->photo_url,
-                'age' => $player->age,
-                'height' => $player->height,
+                'birth_date' => $player->birth_date
+                    ? \Illuminate\Support\Carbon::parse($player->birth_date)->toDateString()
+                    : null,
+                'age' => $player->birth_date
+                    ? \Illuminate\Support\Carbon::parse($player->birth_date)->age
+                    : $player->age,
+                'height' => $player->getRawOriginal('height') ?? $player->height,
                 'height_inches' => $player->height_inches,
                 'weight' => $player->weight_lbs,
                 'weight_lbs' => $player->weight_lbs,
@@ -96,8 +114,23 @@ class RosterController extends Controller
 
     public function coaches(Request $request): JsonResponse
     {
+        return $this->coachRoster($request, $request->integer('team_id') ?: null);
+    }
+
+    public function teamCoaches(Request $request): JsonResponse
+    {
+        $teamId = Team::query()
+            ->where('name', $request->user()->team_name)
+            ->value('id');
+
+        abort_unless($teamId, 403, 'This account is not assigned to a team.');
+
+        return $this->coachRoster($request, $teamId);
+    }
+
+    private function coachRoster(Request $request, ?int $teamId): JsonResponse
+    {
         $seasonId = $request->integer('season_id') ?: Season::current()?->id;
-        $teamId = $request->integer('team_id') ?: null;
 
         $assignments = TeamCoach::query()
             ->with(['coach.ratings', 'team'])
@@ -115,7 +148,7 @@ class RosterController extends Controller
 
             return [
                 'id' => $coach->id,
-                'name' => $coach->name,
+                'name' => trim(($coach->first_name ?? '').' '.($coach->last_name ?? '')),
                 'photo_url' => $coach->photo_url,
                 'role' => $row->role ?: $coach->role,
                 'team_id' => $row->team_id,

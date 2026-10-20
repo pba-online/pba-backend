@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $playoff_id
+ * @property int|null $conference_id
+ * @property string $round
+ * @property int $team1_id
+ * @property int $team2_id
+ * @property int $team1_wins
+ * @property int $team2_wins
+ * @property int|null $winner_team_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Conference|null $conference
+ * @property-read Team|null $team1
+ * @property-read Team|null $team2
+ * @property-read Team|null $winner
+ */
 class PlayoffSeries extends Model
 {
     protected $table = 'playoff_series';

@@ -5,6 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int|null $draft_id
+ * @property int $round_number
+ * @property int|null $pick_number
+ * @property int|null $original_team_id
+ * @property int|null $current_team_id
+ * @property int|null $player_id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read int|null $pick
+ * @property-read string $label
+ * @property-read Draft|null $draft
+ * @property-read Team|null $originalTeam
+ * @property-read Player|null $player
+ */
 class DraftPick extends Model
 {
     protected $fillable = [

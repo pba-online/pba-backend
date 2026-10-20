@@ -5,6 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $season_id
+ * @property int $home_team_id
+ * @property int $away_team_id
+ * @property int|null $venue_id
+ * @property \Illuminate\Support\Carbon|null $game_date
+ * @property string|null $game_time
+ * @property int|null $home_score
+ * @property int|null $away_score
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Team|null $homeTeam
+ * @property-read Team|null $awayTeam
+ * @property-read Venue|null $venue
+ */
 class Game extends Model
 {
     protected $fillable = [

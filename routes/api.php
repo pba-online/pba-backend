@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AwardController;
+use App\Http\Controllers\Api\CoachController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DraftController;
@@ -24,11 +25,27 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/team/rosters', [RosterController::class, 'teamIndex'])->middleware('role:team');
+    Route::get('/team/coaches/staff', [RosterController::class, 'teamCoaches'])->middleware('role:team');
 
     Route::post('/teams', [TeamController::class, 'store'])->middleware('role:admin');
+    Route::post('/seasons', [SeasonController::class, 'store'])->middleware('role:admin');
+    Route::put('/seasons/{id}/current', [SeasonController::class, 'setCurrent'])->middleware('role:admin');
+    Route::get('/drafts/admin', [DraftController::class, 'adminIndex'])->middleware('role:admin');
+    Route::get('/drafts/{id}/details', [DraftController::class, 'show'])->middleware('role:admin');
+    Route::get('/drafts/{id}/players', [DraftController::class, 'availablePlayers'])->middleware('role:admin');
+    Route::post('/drafts', [DraftController::class, 'store'])->middleware('role:admin');
+    Route::post('/drafts/{id}/start', [DraftController::class, 'start'])->middleware('role:admin');
+    Route::post('/drafts/{id}/players', [DraftController::class, 'storePlayer'])->middleware('role:admin');
+    Route::put('/drafts/{draftId}/picks/{pickId}', [DraftController::class, 'updatePick'])->middleware('role:admin');
+    Route::put('/players/{id}', [PlayerController::class, 'update'])->middleware('role:admin');
+    Route::put('/coaches/{id}/ratings', [CoachController::class, 'updateRatings'])->middleware('role:admin');
     Route::get('/teams/divisions', [TeamController::class, 'divisions'])->middleware('role:admin');
     Route::put('/players/{id}/ratings', [PlayerController::class, 'updateRatings'])->middleware('role:admin');
+    Route::put('/standings/upsert', [StandingController::class, 'upsert'])->middleware('role:admin');
     Route::post('/free-agents/coaches', [FreeAgentController::class, 'storeCoach'])->middleware('role:admin');
+    Route::post('/free-agents/players', [FreeAgentController::class, 'storePlayer'])->middleware('role:admin');
+    Route::put('/free-agents/players/{id}', [FreeAgentController::class, 'updatePlayer'])->middleware('role:admin');
     Route::post('/league-history', [LeagueHistoryController::class, 'store'])->middleware('role:admin');
     Route::post('/trades', [TradeController::class, 'store'])->middleware('role:admin,team');
     Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->middleware('role:admin');
@@ -50,10 +67,6 @@ Route::get('/homecourt', [VenueController::class, 'homecourt']);
 Route::get('/contracts', [ContractController::class, 'index']);
 Route::get('/transactions', [TransactionController::class, 'index']);
 Route::get('/standings', [StandingController::class, 'index']);
-Route::get('/standings', [StandingController::class, 'index']);
-Route::middleware('admin')->group(function () {
-    Route::patch('/standings/{standing}', [StandingController::class, 'update']);
-});
 Route::get('/playoffs', [PlayoffController::class, 'index']);
 Route::get('/awards', [AwardController::class, 'index']);
 Route::get('/league-history', [LeagueHistoryController::class, 'index']);

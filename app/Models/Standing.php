@@ -5,6 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $season_id
+ * @property int|null $conference_id
+ * @property int $team_id
+ * @property int $wins
+ * @property int $losses
+ * @property float|null $win_percentage
+ * @property float|null $games_behind
+ * @property int|null $position
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Team|null $team
+ */
 class Standing extends Model
 {
     protected $fillable = [

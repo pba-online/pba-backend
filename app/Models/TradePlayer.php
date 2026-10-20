@@ -5,6 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $trade_id
+ * @property int $player_id
+ * @property int $from_team_id
+ * @property int $to_team_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property-read Player|null $player
+ */
 class TradePlayer extends Model
 {
     protected $fillable = [

@@ -56,6 +56,9 @@ class FreeAgentController extends Controller
                 'first_name' => $p->first_name,
                 'last_name' => $p->last_name,
                 'photo_url' => $p->photo_url,
+                'birth_date' => $p->birth_date
+                    ? \Illuminate\Support\Carbon::parse($p->birth_date)->toDateString()
+                    : null,
                 'age' => $p->age,
                 'height' => $p->height,
                 'height_inches' => $p->height_inches,
@@ -73,6 +76,43 @@ class FreeAgentController extends Controller
         return response()->json($data);
     }
 
+    public function storePlayer(Request $request): JsonResponse
+    {
+        $data = $request->validate($this->playerRules());
+        $player = Player::query()->create($data);
+
+        $season = Season::current();
+        if ($season) {
+            PlayerRating::query()->firstOrCreate([
+                'player_id' => $player->id,
+                'season_id' => $season->id,
+            ]);
+        }
+
+        return response()->json($player->fresh(), 201);
+    }
+
+    public function updatePlayer(Request $request, int $id): JsonResponse
+    {
+        $player = Player::query()->findOrFail($id);
+        $player->update($request->validate($this->playerRules()));
+
+        return response()->json($player->fresh());
+    }
+
+    private function playerRules(): array
+    {
+        return [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'age' => ['nullable', 'integer', 'min:0', 'max:99'],
+            'height_inches' => ['nullable', 'integer', 'min:48', 'max:96'],
+            'weight_lbs' => ['nullable', 'integer', 'min:100', 'max:500'],
+            'position' => ['nullable', 'string', 'max:20'],
+            'photo_url' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
     public function coaches(): JsonResponse
     {
         $seasonId = Season::current()?->id;
@@ -83,7 +123,8 @@ class FreeAgentController extends Controller
         $coaches = Coach::query()
             ->with('ratings')
             ->whereNotIn('id', $assignedIds)
-            ->orderBy('name')
+            ->orderBy('first_name')
+            ->orderBy('last_name')
             ->get()
             ->map(function (Coach $c) use ($seasonId) {
                 $rating = $c->ratings
