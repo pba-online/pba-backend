@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: pba-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: FRONTEND_URL
+        value: https://pba-online.vercel.app
+      - key: CORS_ALLOWED_ORIGIN_PATTERNS
+        value: ""
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        value: postgres
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+      - key: CACHE_STORE
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: LOG_CHANNEL
+        value: stderr
