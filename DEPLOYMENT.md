@@ -24,12 +24,13 @@ The API is available on host port `8000` and maps to Apache's container port `10
 4. Wait for the health check at `/up` to pass.
 
 The Render service uses Apache on port 10000 and includes PDO PostgreSQL support. It does not run migrations automatically.
+The API CORS configuration allows `https://pba-online.vercel.app`; keep `FRONTEND_URL` set to that origin in Render as well.
 
 ## Vercel Frontend
 
 1. Import the frontend repository into Vercel.
 2. Set the Vercel project Root Directory to `frontend`.
-3. Add `VITE_API_BASE_URL` with the deployed Render API URL ending in `/api` (for example, `https://pba-api.onrender.com/api` if that is the URL assigned to your Render service).
+3. Optionally set `VITE_API_BASE_URL` to the deployed Render API URL ending in `/api`. The frontend defaults to `https://pba-backend-1.onrender.com/api`.
 4. Deploy or redeploy the frontend.
 
 `frontend/vercel.json` includes the Vite output and SPA rewrites needed by React Router. No Supabase credentials belong in Vercel.

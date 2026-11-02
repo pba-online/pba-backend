@@ -4,6 +4,7 @@ $frontendOrigins = array_filter(array_map(
     'trim',
     explode(',', (string) env('FRONTEND_URL', 'http://localhost:5173'))
 ));
+$frontendOrigins[] = 'https://pba-online.vercel.app';
 $originPatterns = array_filter(array_map(
     'trim',
     explode(',', (string) env('CORS_ALLOWED_ORIGIN_PATTERNS', ''))
