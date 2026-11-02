@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::get('/team/rosters', [RosterController::class, 'teamIndex'])->middleware('role:team');
     Route::get('/team/coaches/staff', [RosterController::class, 'teamCoaches'])->middleware('role:team');
+    Route::get('/trades/pending', [TradeController::class, 'pending'])->middleware('role:admin');
+    Route::post('/trades/{id}/approve', [TradeController::class, 'approve'])->middleware('role:admin');
+    Route::post('/trades/{id}/decline', [TradeController::class, 'decline'])->middleware('role:admin');
 
     Route::post('/teams', [TeamController::class, 'store'])->middleware('role:admin');
     Route::post('/seasons', [SeasonController::class, 'store'])->middleware('role:admin');

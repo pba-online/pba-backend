@@ -72,6 +72,7 @@ class User extends Authenticatable
             'email' => $this->email,
             'role' => $this->role,
             'team_id' => $this->team_id,
+            'team_name' => $this->team?->name,
         ];
     }
     public function getAuthPassword()
